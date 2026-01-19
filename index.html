@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Antrian Perpustakaan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-reader"></i>
+                    <h1>Sistem Antrian Perpustakaan</h1>
+                </div>
+                <div class="datetime" id="datetime">
+                    <div id="date"></div>
+                    <div id="time"></div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="dashboard">
+                <!-- Panel Kontrol -->
+                <div class="control-panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-sliders-h"></i> Panel Kontrol Antrian</h2>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="queueNumber">
+                                <i class="fas fa-hashtag"></i> Nomor Antrian
+                            </label>
+                            <div class="queue-input-container">
+                                <button class="btn-secondary" id="decreaseBtn">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" id="queueNumber" min="1" value="101" readonly>
+                                <button class="btn-secondary" id="increaseBtn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="btn-secondary" id="resetBtn">
+                                    <i class="fas fa-redo"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="operator">
+                                <i class="fas fa-user-tie"></i> Operator Tujuan
+                            </label>
+                            <div class="operators-grid" id="operatorsGrid">
+                                <!-- Operator akan diisi oleh JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-volume-up"></i> Pengaturan Suara</label>
+                            <div class="voice-controls">
+                                <div class="control-item">
+                                    <span>Volume</span>
+                                    <input type="range" id="volumeSlider" min="0" max="100" value="80">
+                                    <span id="volumeValue">80%</span>
+                                </div>
+                                <div class="control-item">
+                                    <span>Kecepatan</span>
+                                    <input type="range" id="speedSlider" min="0.5" max="2" step="0.1" value="1">
+                                    <span id="speedValue">1.0x</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="callQueueBtn" class="btn-primary">
+                                <i class="fas fa-bullhorn"></i> Panggil Antrian
+                            </button>
+                            <button id="repeatBtn" class="btn-secondary">
+                                <i class="fas fa-redo"></i> Ulangi Panggilan
+                            </button>
+                            <button id="testVoiceBtn" class="btn-secondary">
+                                <i class="fas fa-play-circle"></i> Uji Suara
+                            </button>
+                        </div>
+
+                        <div class="queue-history">
+                            <h3><i class="fas fa-history"></i> Riwayat Panggilan</h3>
+                            <div class="history-list" id="historyList">
+                                <!-- Riwayat akan diisi oleh JavaScript -->
+                            </div>
+                            <button id="clearHistoryBtn" class="btn-small">
+                                <i class="fas fa-trash"></i> Hapus Riwayat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tampilan Antrian -->
+                <div class="display-panel">
+                    <div class="current-queue-display">
+                        <div class="display-header">
+                            <h2><i class="fas fa-desktop"></i> ANTRIAN SAAT INI</h2>
+                        </div>
+                        <div class="queue-info">
+                            <div class="queue-number" id="currentQueueNumber">--</div>
+                            <div class="operator-info">
+                                <div class="label">Silahkan menuju ke:</div>
+                                <div class="value" id="currentOperator">Operator 1</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="next-queue-display">
+                        <h3><i class="fas fa-forward"></i> ANTRIAN BERIKUTNYA</h3>
+                        <div class="next-number" id="nextQueueNumber">102</div>
+                    </div>
+
+                    <div class="operators-status">
+                        <h3><i class="fas fa-users"></i> STATUS OPERATOR</h3>
+                        <div class="status-grid" id="statusGrid">
+                            <!-- Status operator akan diisi oleh JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="statistics">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalCalled">0</div>
+                                <div class="stat-label">Total Dipanggil</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="avgWaitTime">0</div>
+                                <div class="stat-label">Rata-rata Tunggu (menit)</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="busyOperators">0</div>
+                                <div class="stat-label">Operator Sibuk</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="system-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Sistem Antrian Perpustakaan | Suara Pengumuman: Bahasa Indonesia</span>
+                </div>
+                <div class="copyright">
+                    &copy; 2024 Perpustakaan Digital. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Audio untuk suara pengumuman -->
+    <audio id="notificationSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
